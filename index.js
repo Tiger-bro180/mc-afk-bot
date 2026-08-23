@@ -8,14 +8,16 @@ app.listen(process.env.PORT || 3000, () => console.log('Web server running.'));
 
 // === YOUR SERVER DETAILS ===
 const SERVER_HOST = 'tigersmpforboys.mcsh.io'; 
+const SERVER_PORT = 14012; // Your actual server port from the console log
 const BOT_USERNAME = 'Player_Helper';         
 
 function createBot() {
   const bot = mineflayer.createBot({
     host: SERVER_HOST,
+    port: SERVER_PORT,
     username: BOT_USERNAME,
-    auth: 'offline', // Essential for offline/cracked server connections
-    version: false   // Auto-detects server version (1.20.x, 1.21, etc.)
+    auth: 'offline',
+    version: '1.20.4' // Paper 1.20.4 confirmed in server console
   });
 
   bot.once('spawn', () => {
