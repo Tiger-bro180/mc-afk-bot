@@ -1,5 +1,6 @@
 const express = require('express');
 const mineflayer = require('mineflayer');
+const autoeat = require('mineflayer-auto-eat').plugin;
 
 // Keeps cloud hosting active
 const app = express();
@@ -7,9 +8,9 @@ app.get('/', (req, res) => res.send('Bot is online 24/7!'));
 app.listen(process.env.PORT || 3000, () => console.log('Web server running.'));
 
 // === YOUR SERVER DETAILS ===
-const SERVER_HOST = 'tigersmpforboys.mcsh.io'; 
-const SERVER_PORT = 25565;                     
-const BOT_USERNAME = 'Player_Helper';         
+const SERVER_HOST = 'tigersmpforboys.mcsh.io'; // Your server IP
+const SERVER_PORT = 25565;                     // Minecraft port
+const BOT_USERNAME = 'Player_Helper';         // Bot username
 
 function createBot() {
   const bot = mineflayer.createBot({
@@ -19,10 +20,20 @@ function createBot() {
     version: '1.20.4',
   });
 
+  // Load Auto-Eat Plugin
+  bot.loadPlugin(autoeat);
+
   bot.once('spawn', () => {
     console.log(`${bot.username} joined tigersmpforboys.mcsh.io!`);
 
-    // HUMAN-LIKE ANTI-AFK
+    // AUTO-EAT CONFIGURATION
+    bot.autoEat.options = {
+      priority: 'foodPoints',
+      startAt: 14,
+      bannedFood: ['rotten_flesh', 'pufferfish', 'spider_eye', 'poisonous_potato'],
+    };
+
+    // HUMAN-LIKE ANTI-AFK SYSTEM
     setInterval(() => {
       if (!bot.entity) return;
 
@@ -41,6 +52,8 @@ function createBot() {
       }
     }, 15000);
   });
+
+  bot.on('autoeat_started', () => console.log('Bot started eating food...'));
 
   bot.on('end', () => {
     console.log('Disconnected. Reconnecting in 10 seconds...');
