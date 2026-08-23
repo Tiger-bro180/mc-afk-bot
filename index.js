@@ -6,9 +6,9 @@ const app = express();
 app.get('/', (req, res) => res.send('Bot is online 24/7!'));
 app.listen(process.env.PORT || 3000, () => console.log('Web server running.'));
 
-// === YOUR SERVER DETAILS ===
-const SERVER_HOST = 'tigersmpforboys.mcsh.io'; 
-const SERVER_PORT = 14012; // Your actual server port from the console log
+// === YOUR SERVER DIRECT IP & PORT ===
+const SERVER_HOST = '162.55.241.186'; 
+const SERVER_PORT = 14012;            
 const BOT_USERNAME = 'Player_Helper';         
 
 function createBot() {
@@ -17,11 +17,11 @@ function createBot() {
     port: SERVER_PORT,
     username: BOT_USERNAME,
     auth: 'offline',
-    version: '1.20.4' // Paper 1.20.4 confirmed in server console
+    version: '1.20.4'
   });
 
   bot.once('spawn', () => {
-    console.log(`${bot.username} joined ${SERVER_HOST}!`);
+    console.log(`${bot.username} successfully joined ${SERVER_HOST}:${SERVER_PORT}!`);
 
     // HUMAN-LIKE ANTI-AFK
     setInterval(() => {
