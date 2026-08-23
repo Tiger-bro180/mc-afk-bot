@@ -1,6 +1,5 @@
 const express = require('express');
 const mineflayer = require('mineflayer');
-const autoeat = require('mineflayer-auto-eat').plugin;
 
 // Keeps cloud hosting active
 const app = express();
@@ -17,20 +16,11 @@ function createBot() {
     host: SERVER_HOST,
     port: SERVER_PORT,
     username: BOT_USERNAME,
-    version: '1.20.4',
+    hideErrors: false
   });
 
-  bot.loadPlugin(autoeat);
-
   bot.once('spawn', () => {
-    console.log(`${bot.username} joined tigersmpforboys.mcsh.io!`);
-
-    // AUTO-EAT CONFIGURATION
-    bot.autoEat.options = {
-      priority: 'foodPoints',
-      startAt: 14,
-      bannedFood: ['rotten_flesh', 'pufferfish', 'spider_eye', 'poisonous_potato'],
-    };
+    console.log(`${bot.username} joined ${SERVER_HOST}!`);
 
     // HUMAN-LIKE ANTI-AFK
     setInterval(() => {
@@ -52,14 +42,12 @@ function createBot() {
     }, 15000);
   });
 
-  bot.on('autoeat_started', () => console.log('Bot started eating food...'));
-
   bot.on('end', () => {
     console.log('Disconnected. Reconnecting in 10 seconds...');
     setTimeout(createBot, 10000);
   });
 
-  bot.on('error', (err) => console.log('Bot error:', err));
+  bot.on('error', (err) => console.log('Bot error:', err.message));
 }
 
 createBot();
