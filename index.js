@@ -14,8 +14,8 @@ function createBot() {
   const bot = mineflayer.createBot({
     host: SERVER_HOST,
     username: BOT_USERNAME,
-    auth: 'offline', // Crucial for non-premium/cracked servers
-    version: false   // Enables automatic server version detection
+    auth: 'offline', // Essential for offline/cracked server connections
+    version: false   // Auto-detects server version (1.20.x, 1.21, etc.)
   });
 
   bot.once('spawn', () => {
