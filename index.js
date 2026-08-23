@@ -8,15 +8,14 @@ app.listen(process.env.PORT || 3000, () => console.log('Web server running.'));
 
 // === YOUR SERVER DETAILS ===
 const SERVER_HOST = 'tigersmpforboys.mcsh.io'; 
-const SERVER_PORT = 25565;                     
 const BOT_USERNAME = 'Player_Helper';         
 
 function createBot() {
   const bot = mineflayer.createBot({
     host: SERVER_HOST,
-    port: SERVER_PORT,
     username: BOT_USERNAME,
-    hideErrors: false
+    auth: 'offline', // Crucial for non-premium/cracked servers
+    version: false   // Enables automatic server version detection
   });
 
   bot.once('spawn', () => {
@@ -42,8 +41,8 @@ function createBot() {
     }, 15000);
   });
 
-  bot.on('end', () => {
-    console.log('Disconnected. Reconnecting in 10 seconds...');
+  bot.on('end', (reason) => {
+    console.log(`Disconnected (${reason}). Reconnecting in 10 seconds...`);
     setTimeout(createBot, 10000);
   });
 
