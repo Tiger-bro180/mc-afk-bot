@@ -8,9 +8,9 @@ app.get('/', (req, res) => res.send('Bot is online 24/7!'));
 app.listen(process.env.PORT || 3000, () => console.log('Web server running.'));
 
 // === YOUR SERVER DETAILS ===
-const SERVER_HOST = 'tigersmpforboys.mcsh.io'; // Your server IP
-const SERVER_PORT = 25565;                     // Minecraft port
-const BOT_USERNAME = 'Player_Helper';         // Bot username
+const SERVER_HOST = 'tigersmpforboys.mcsh.io'; 
+const SERVER_PORT = 25565;                     
+const BOT_USERNAME = 'Player_Helper';         
 
 function createBot() {
   const bot = mineflayer.createBot({
@@ -20,7 +20,6 @@ function createBot() {
     version: '1.20.4',
   });
 
-  // Load Auto-Eat Plugin
   bot.loadPlugin(autoeat);
 
   bot.once('spawn', () => {
@@ -33,7 +32,7 @@ function createBot() {
       bannedFood: ['rotten_flesh', 'pufferfish', 'spider_eye', 'poisonous_potato'],
     };
 
-    // HUMAN-LIKE ANTI-AFK SYSTEM
+    // HUMAN-LIKE ANTI-AFK
     setInterval(() => {
       if (!bot.entity) return;
 
