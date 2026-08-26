@@ -1,56 +1,66 @@
 const express = require('express');
 const mineflayer = require('mineflayer');
 
+// 1. Keep-Alive Web Server (for hosting platforms)
 const app = express();
-app.get('/', (req, res) => res.send('Bot is online 24/7!'));
-app.listen(process.env.PORT || 3000, () => console.log('Web server running.'));
+const PORT = process.env.PORT || 3000;
 
-const SERVER_HOST = '162.55.241.186';
-const SERVER_PORT = 14012;
-const BOT_USERNAME = 'Player_Helper';
+app.get('/', (req, res) => {
+  res.send('AFK Bot is alive!');
+});
+
+app.listen(PORT, () => {
+  console.log(`Web server listening on port ${PORT}`);
+});
+
+// 2. Mineflayer Bot Configuration
+const botOptions = {
+  host: '162.55.241.186',
+  port: 14012,
+  username: 'Player_Helper',
+  checkTimeoutInterval: 60 * 1000 // Extended to 60s to prevent keepalive timeouts
+};
 
 function createBot() {
-  const bot = mineflayer.createBot({
-    host: SERVER_HOST,
-    port: SERVER_PORT,
-    username: BOT_USERNAME,
-    auth: 'offline',
-    version: '1.20.4',
-    checkTimeoutInterval: 60 * 1000
+  const bot = mineflayer.createBot(botOptions);
+
+  bot.on('login', () => {
+    console.log(`${bot.username} successfully connected to ${botOptions.host}:${botOptions.port}!`);
   });
 
-  bot.once('spawn', () => {
-    console.log(`${bot.username} successfully connected to ${SERVER_HOST}:${SERVER_PORT}!`);
-
+  // Random movement loop to prevent AFK kicks
+  bot.on('spawn', () => {
     setInterval(() => {
-      if (!bot.entity) return;
-
-      const action = Math.floor(Math.random() * 3);
-
-      if (action === 0) {
+      const actions = ['jump', 'sneak', 'left', 'right', 'forward', 'back'];
+      const randomAction = actions[Math.floor(Math.random() * actions.length)];
+      
+      if (randomAction === 'jump') {
         bot.setControlState('jump', true);
-        setTimeout(() => bot.setControlState('jump', false), 400);
-      } else if (action === 1) {
+        setTimeout(() => bot.setControlState('jump', false), 500);
+      } else if (randomAction === 'sneak') {
         bot.setControlState('sneak', true);
-        setTimeout(() => bot.setControlState('sneak', false), 800);
+        setTimeout(() => bot.setControlState('sneak', false), 1000);
       } else {
-        const yaw = (Math.random() * 3.14) - 1.57;
-        const pitch = (Math.random() * 1) - 0.5;
-        bot.look(yaw, pitch, true);
+        bot.setControlState(randomAction, true);
+        setTimeout(() => bot.setControlState(randomAction, false), 1000);
       }
     }, 15000);
   });
 
+  // Handle kicks and disconnects with auto-reconnect
   bot.on('kicked', (reason) => {
-    console.log('Bot was kicked for reason:', reason);
+    console.log(`Bot kicked for reason: ${reason}`);
   });
 
-  bot.on('end', (reason) => {
-    console.log(`Disconnected (${reason}). Reconnecting in 10 seconds...`);
+  bot.on('end', () => {
+    console.log('Bot disconnected. Reconnecting in 10 seconds...');
     setTimeout(createBot, 10000);
   });
 
-  bot.on('error', (err) => console.log('Bot error:', err.message));
+  bot.on('error', (err) => {
+    console.error(`Bot error: ${err.message}`);
+  });
 }
 
+// Start the bot
 createBot();
