@@ -5,9 +5,9 @@ const app = express();
 app.get('/', (req, res) => res.send('Bot is online 24/7!'));
 app.listen(process.env.PORT || 3000, () => console.log('Web server running.'));
 
-const SERVER_HOST = '162.55.241.186'; 
-const SERVER_PORT = 14012;            
-const BOT_USERNAME = 'Player_Helper';         
+const SERVER_HOST = '162.55.241.186';
+const SERVER_PORT = 14012;
+const BOT_USERNAME = 'Player_Helper';
 
 function createBot() {
   const bot = mineflayer.createBot({
@@ -15,14 +15,13 @@ function createBot() {
     port: SERVER_PORT,
     username: BOT_USERNAME,
     auth: 'offline',
-    version: '1.20.4', // Hardcoded version prevents the 26.1.2 auto-version crash
+    version: '1.20.4',
     checkTimeoutInterval: 60 * 1000
   });
 
   bot.once('spawn', () => {
     console.log(`${bot.username} successfully connected to ${SERVER_HOST}:${SERVER_PORT}!`);
 
-    // Anti-AFK routine
     setInterval(() => {
       if (!bot.entity) return;
 
